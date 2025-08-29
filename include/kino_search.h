@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <iostream>
 #include <chrono>
+#include <cmath>
 #define _USE_MATH_DEFINES
 
 struct State {
