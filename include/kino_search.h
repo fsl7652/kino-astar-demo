@@ -3,7 +3,6 @@
 #include <queue>
 #include <unordered_set>
 #include <memory>
-#include <cmath>
 #include "OBB.h"
 #include "render_circle.h"
 #include <algorithm>
