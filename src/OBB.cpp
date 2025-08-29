@@ -1,4 +1,5 @@
 #include "OBB.h"
+#include <cfloat>
 
 
 std::array<SDL_FPoint, 4> OBB::getCorners() const {
