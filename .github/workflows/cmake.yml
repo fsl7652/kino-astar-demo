@@ -14,13 +14,22 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install SDL3
-      run: sudo apt-get update && sudo apt-get install -y libsdl3-dev
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y cmake build-essential git
 
-    - name: Configure and Build
+    - name: Build and Install SDL3
+      run: |
+        git clone https://github.com/libsdl-org/SDL.git -b main --depth=1
+        cd SDL
+        mkdir build && cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+        make -j$(nproc)
+        sudo make install
+
+    - name: Configure and Build Project
       run: |
         mkdir build && cd build
-        cmake .. && make -j4
+        cmake .. && make -j$(nproc)
 
     - name: Verify Executable
       run: |
