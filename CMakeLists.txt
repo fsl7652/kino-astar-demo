@@ -4,8 +4,9 @@ project(JetRacerPathfinding VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Simple SDL3 find
-find_package(SDL3 REQUIRED)
+# Use pkg-config to find SDL3
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(SDL3 REQUIRED sdl3)
 
 # Source files
 set(SOURCES
@@ -23,4 +24,6 @@ include_directories(include ${SDL3_INCLUDE_DIRS})
 
 # Executable
 add_executable(JetRacerDemo ${SOURCES})
+
+# Link SDL3
 target_link_libraries(JetRacerDemo ${SDL3_LIBRARIES})
