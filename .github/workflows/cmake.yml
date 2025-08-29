@@ -22,7 +22,7 @@ jobs:
         git clone https://github.com/libsdl-org/SDL.git -b main --depth=1
         cd SDL
         mkdir build && cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+        cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DSDL_UNIX_CONSOLE_BUILD=ON
         make -j$(nproc)
         sudo make install
 
