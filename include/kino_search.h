@@ -11,6 +11,10 @@
 #include <cmath>
 #define _USE_MATH_DEFINES
 
+/// @brief State structure representing the car's position and heading
+/// @param x X position
+/// @param y Y position
+/// @param yaw Heading angle in radians
 struct State {
     double x, y, yaw;
 
@@ -22,7 +26,8 @@ struct State {
             std::abs(yaw - other.yaw) < 1e-3;
     }
 };
-
+/// @brief Hash function for State to use in unordered containers
+/// @note Combines hashes of x, y, and yaw using XOR
 namespace std {
     template<>
     struct hash<State> {
@@ -37,6 +42,12 @@ struct Node;
 struct NodeDeleter {
     void operator()(Node* ptr) const;
 };
+/// @brief Node structure for A* search
+/// @param state The state represented by this node
+/// @param cost Cost from start to this node
+/// @param heuristic Heuristic cost estimate to goal
+/// @param parent Pointer to parent node for path reconstruction
+/// @param motion_path Sequence of states from parent to this node
 
 struct Node {
     State state;
@@ -54,6 +65,18 @@ struct Node {
 
 using NodePtr = std::unique_ptr<Node, NodeDeleter>;
 
+/// @brief Metrics for search performance tracking
+/// @param status Current status of the search
+/// @param path_cost Cost of the found path
+/// @param path_length Length of the found path in nodes
+/// @param nodes_expanded Number of nodes expanded during search
+/// @param nodes_generated Number of nodes generated during search
+/// @param max_open_size Maximum size of the open set during search
+/// @param calc_time Total computation time in seconds
+/// @param path_found Whether a valid path was found
+/// @param current_open_size Current size of the open set  
+/// @param current_closed_size Current size of the closed set
+/// @note Provides a reset function to clear metrics
 struct SearchMetrics {
     std::string status = "Idle";
     double path_cost = 0.0;
@@ -79,6 +102,10 @@ struct SearchMetrics {
     }
 };
 
+/// @brief Kinodynamic A* path planner for a simple car model
+/// @param car_length Length of the car for collision checking
+/// @param car_width Width of the car for collision checking
+/// @param wheelbase Distance between front and rear axles
 class SimpleKino {
 public:
     SimpleKino(double car_length = 0.25, double car_width = 0.19, double wheelbase = 0.15);

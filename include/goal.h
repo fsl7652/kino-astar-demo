@@ -1,6 +1,10 @@
 #include <array>
 #include "OBB.h"
 
+/// @brief Goal structure containing an OBB and rendering function
+/// @param box The oriented bounding box representing the goal area
+/// @param display Whether to render the goal box
+
 struct Goal {
     OBB box;
     bool display;

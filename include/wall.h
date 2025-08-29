@@ -2,6 +2,8 @@
 #include <array>
 #include "OBB.h"
 
+/// @brief Wall structure containing an OBB and rendering function
+/// @param box The oriented bounding box representing the wall
 struct Wall {
     OBB box;
 

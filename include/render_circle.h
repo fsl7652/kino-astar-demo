@@ -5,7 +5,10 @@
 #include <SDL3/SDL.h>
 #include <cmath>
 
-
+/// @brief Utility class for rendering circles in SDL
+/// @param roundUpToMultipleOfEight Rounds an integer up to the nearest multiple of 8
+/// @param drawCircle Draws a circle using line segments for smoother appearance
+/// @param drawCircleFast Draws a circle using the Midpoint Circle Algorithm for pixel-perfect rendering
 class RenderCircle {
 private:
     static int roundUpToMultipleOfEight(int v)

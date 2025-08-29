@@ -5,18 +5,40 @@
 #include <cmath>
 #include "kino_search.h"
 
+/// @brief Simple car model with position, velocity, and rendering
+/// @param x X position
+/// @param y Y position
+/// @param yaw Heading angle in radians
+/// @param v Velocity vector 
+/// @param look Lookahead point for path following
+/// @param pursuit Whether the car is currently following a path
+/// @param wheelbase Distance between front and rear axles
+/// @param length Car length for OBB
+/// @param width Car width for OBB
+/// @param colour Car colour for rendering
+/// @param max_speed Maximum forward speed
+/// @param max_acceleration Maximum acceleration
+/// @param max_deceleration Maximum deceleration (braking)
+/// @param max_reverse_speed Maximum reverse speed
+/// @param friction Friction coefficient for slowing down when not accelerating
+/// @param current_path Current path being followed
+/// @param current_waypoint Index of the next waypoint in the path
+/// @param lookahead_distance Distance ahead of the car to look for path following
+/// @note Uses a simple bicycle model for motion and pure pursuit for path following
+
+
 class JetRacer {
 public:
-    float x, y;   //position
-    float yaw;    //heading
-    SDL_FPoint v;      //velocity
-    SDL_FPoint look; //lookahead
+    float x, y;   
+    float yaw;    
+    SDL_FPoint v;     
+    SDL_FPoint look; 
     bool pursuit;
 
-    float wheelbase;   //distance between front and rear axle
-    float length;      //length
-    float width;       //width
-    SDL_Color colour;   //colour for rendering
+    float wheelbase;   
+    float length;      
+    float width;       
+    SDL_Color colour;   
 
     float max_speed;        
     float max_acceleration;   

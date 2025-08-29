@@ -8,13 +8,23 @@
 #include <cmath>
 #include <cfloat>
 
+
+/// @brief Result of a collision check between two OBBs
+/// @param collided Whether a collision occurred
+/// @param normal The collision normal vector
+/// @param depth The penetration depth of the collision
 struct CollisionResult {
     bool collided;
     SDL_FPoint normal;
     float depth;
 };
 
-
+/// @brief Oriented Bounding Box (OBB) for 2D collision detection
+/// @param center Center position of the OBB
+/// @param half_w Half the width of the OBB
+/// @param half_h Half the height of the OBB
+/// @param angle Rotation angle of the OBB in radians
+/// @note Uses Separating Axis Theorem (SAT) for collision detection
 class OBB
 {
 public:
