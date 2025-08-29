@@ -153,7 +153,7 @@ void JetRacer::purePursuitPath(const std::vector<State>& path, const OBB& goal_b
         }
     }
     look = { float(look_pt.x), float(look_pt.y) };
-    SDL_FPoint rel_pos = { look_pt.x - x, look_pt.y - y };
+    SDL_FPoint rel_pos = { look.x - x, look.y - y };
     double alpha = std::atan2(rel_pos.y, rel_pos.x) - yaw;
     double steer = std::atan2(2.0 * wheelbase * std::sin(alpha), effective_look);
     steer = std::min(0.5, std::max(steer, -0.5));
