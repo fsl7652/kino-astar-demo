@@ -6,6 +6,7 @@
 #include <SDL3/SDL.h>
 #include <limits>
 #include <cmath>
+#include <cfloat>
 
 struct CollisionResult {
     bool collided;
