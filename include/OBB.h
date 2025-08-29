@@ -5,6 +5,7 @@
 #define SDL_DISABLE_IMPLICIT_LINKING
 #include <SDL3/SDL.h>
 #include <limits>
+#include <cmath>
 
 struct CollisionResult {
     bool collided;
