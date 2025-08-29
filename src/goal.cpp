@@ -1,5 +1,6 @@
 #include "goal.h"
 
+//renders the goal box as a green rectangle
 void Goal::render(SDL_Renderer* renderer, float scale) const {
     auto pts = box.getCorners();
     SDL_FPoint loop[5];

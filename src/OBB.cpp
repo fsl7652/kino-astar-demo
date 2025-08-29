@@ -1,6 +1,6 @@
 #include "OBB.h"
 
-
+//calculates the four corners of the OBB based on center, half-width, half-height and rotation angle
 std::array<SDL_FPoint, 4> OBB::getCorners() const {
     std::array<SDL_FPoint, 4> pts{};
     float cos_y = std::cos(angle);
@@ -15,7 +15,7 @@ std::array<SDL_FPoint, 4> OBB::getCorners() const {
     }
     return pts;
 }
-
+//OBB collision detection using Separating Axis Theorem (SAT)
 CollisionResult OBB::collision(const OBB& obj) const {
     auto obj1corners = getCorners();
     auto obj2corners = obj.getCorners();
@@ -31,7 +31,7 @@ CollisionResult OBB::collision(const OBB& obj) const {
         for (int i = 0; i < 4; i++)
         {
             SDL_FPoint normal = normalFromEdge(pts[i], pts[(i+1) % 4]);
-
+            //project both OBBs onto the normal and check for overlap
             float min1, max1, min2, max2;
             projectNormal(obj1corners,normal, min1, max1);
             projectNormal(obj2corners, normal, min2, max2);
@@ -55,7 +55,7 @@ CollisionResult OBB::collision(const OBB& obj) const {
     }
     return result;
 }
-
+//expanded collision check with margin for pathfinding clearance
 CollisionResult OBB::expandedCollision(const OBB& obj, float margin) const {
     auto obj1corners = getCorners();
     auto conf_obj = OBB(obj.center.x, obj.center.y, (obj.half_w * 2) + margin, (obj.half_h * 2) + margin, obj.angle);
@@ -95,7 +95,7 @@ CollisionResult OBB::expandedCollision(const OBB& obj, float margin) const {
     }
     return result;
 }
-
+//calculates the normal vector from an edge defined by two points
 SDL_FPoint OBB::normalFromEdge(const SDL_FPoint& p1, const SDL_FPoint& p2) const
 {
     SDL_FPoint edge{ p2.x - p1.x, p2.y - p1.y };
@@ -107,7 +107,7 @@ SDL_FPoint OBB::normalFromEdge(const SDL_FPoint& p1, const SDL_FPoint& p2) const
     }
     return normal;
 }
-
+//projects the the corners of the OBB onto a given normal and finds the min and max values
 void OBB::projectNormal(const std::array<SDL_FPoint, 4>& pts, const SDL_FPoint& normal, float& min, float& max) const
 {
     min = max = pts[0].x * normal.x + pts[0].y * normal.y;

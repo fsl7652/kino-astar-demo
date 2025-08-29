@@ -9,6 +9,7 @@ void NodeDeleter::operator()(Node* ptr) const {
 
 SimpleKino::SimpleKino(double car_length, double car_width, double wheelbase)
     : car_length(car_length), car_width(car_width), wheelbase(wheelbase) {
+    //allocate node pool
     node_pool.resize(MAX_NODES);
     for (int i = 0; i < MAX_NODES; i++) {
         node_pool[i] = std::make_unique<Node>();
@@ -54,7 +55,7 @@ std::vector<State> SimpleKino::findPath(const State& start, const OBB& goal_box,
         metrics.status = "Failed: No start node";
         return {};
     }
-
+    //priority queue with custom comparator for lowest f_cost
     auto node_cmp = [](Node* a, Node* b) {
         return a->f_cost() > b->f_cost();
         };
@@ -75,7 +76,7 @@ std::vector<State> SimpleKino::findPath(const State& start, const OBB& goal_box,
 
         expanded_nodes.push_back(cur_node->state);
         metrics.nodes_expanded++;
-
+        //check if goal reached
         if (isGoalReached(cur_node->state, goal_box)) {
             auto end_time = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double, std::milli> duration = end_time - start_time;
@@ -96,7 +97,7 @@ std::vector<State> SimpleKino::findPath(const State& start, const OBB& goal_box,
 
             return cur_path;
         }
-
+        //skip if already expanded
         if (closed_set.find(cur_node->state) != closed_set.end()) {
             continue;
         }
@@ -104,16 +105,16 @@ std::vector<State> SimpleKino::findPath(const State& start, const OBB& goal_box,
 
         const std::vector<double> steering_angles = {-0.45, -0.3, -0.15, 0.0, 0.15, 0.3 , 0.45};
         const std::vector<double> distances = { 0.3, 0.6, 1.0 }; 
-
+        //expand neighbors
         for (double steer : steering_angles) {
             for (double dist : distances) {
                 State new_state = propagateState(cur_node->state, steer, dist);
-
+                //check validity
                 if (!isStateValid(new_state, obstacles) ||
                     closed_set.find(new_state) != closed_set.end()) {
                     continue;
                 }
-
+                //create new node and add to open set
                 double new_cost = cur_node->cost + dist * (1.5 * std::abs(steer));
                 double new_heu = calculateHeuristic(new_state, goal);
 
@@ -137,7 +138,7 @@ std::vector<State> SimpleKino::findPath(const State& start, const OBB& goal_box,
         metrics.calc_time = duration.count();
         metrics.status = "No Path Found";
     }
-
+    //print metrics
     std::cout << "\n=== Pathfinding Results ===" << std::endl;
     std::cout << "Status: " << metrics.status << std::endl;
     std::cout << "Time: " << metrics.calc_time << " ms" << std::endl;
@@ -195,7 +196,7 @@ double SimpleKino::calculateHeuristic(const State& a, const State& b) const {
 
 State SimpleKino::propagateState(const State& state, double steering, double distance) const {
     State new_state = state;
-
+    //propagate using simple bicycle model
     if (std::abs(steering) < 1e-3) {
         new_state.x += distance * std::cos(state.yaw);
         new_state.y += distance * std::sin(state.yaw);
@@ -233,10 +234,10 @@ std::vector<State> SimpleKino::BSplineSmooth(std::vector<State>& path, int resol
     if (path.size() < 4) {
         return path;
     }
-
+    //perform B-spline smoothing
     std::vector<State> smooth_path;
     int count = static_cast<int>(path.size()) - 1;
-
+    
     for (int i = 0; i <= count * resolution; i++) {
         float t = static_cast<float>(i) / resolution;
         int seg_num = static_cast<int>(t);

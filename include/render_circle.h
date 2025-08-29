@@ -56,7 +56,8 @@ public:
             SDL_RenderPoint(renderer, point.x, point.y);
         }
     }*/
-
+   
+    // Draws a circle using line segments for smoother appearance
     static inline void drawCircle(SDL_Renderer* renderer, SDL_FPoint center, int radius, SDL_Color colour = {255, 0, 0, 255}) {
         SDL_SetRenderDrawColor(renderer, colour.r, colour.g, colour.b, colour.a);
 

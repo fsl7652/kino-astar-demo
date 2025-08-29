@@ -11,6 +11,8 @@ JetRacer::JetRacer(float x0, float y0, float yaw0)
     colour = { 255, 0, 0, 255 };
 }
 
+
+//updates car position and velocity based on throttle and steering input
 void JetRacer::update(float dt, float throttle, float steering) {
 
     static float cur_steer = 0.0f; 
@@ -21,18 +23,19 @@ void JetRacer::update(float dt, float throttle, float steering) {
 
     float current_speed = std::sqrt(v.x * v.x + v.y * v.y);
     float speed_change = accel * dt;
-
+    //clamp speed to max forward and reverse speeds
     if (current_speed + speed_change > max_speed) {
         speed_change = max_speed - current_speed;
     }
     else if (current_speed + speed_change < -max_reverse_speed) {
         speed_change = -max_reverse_speed - current_speed;
     }
-
+    //straight line motion
     if (std::abs(cur_steer) < 0.001f) {
         v.x += speed_change * std::cos(yaw);
         v.y += speed_change * std::sin(yaw);
     }
+    //turning motion
     else {
         float turning_radius = wheelbase / std::tan(cur_steer);
         float angular_velocity = current_speed / turning_radius;
@@ -49,11 +52,12 @@ void JetRacer::update(float dt, float throttle, float steering) {
 
     x += v.x * dt;
     y += v.y * dt;
-
+    //apply friction to gradually slow the car when not accelerating
     v.x *= (1.0f - friction * dt );
     v.y *= (1.0f - friction * dt );
 }
 
+//TODO: improve rendering with smoothed paths
 void JetRacer::render(SDL_Renderer* renderer, float scale) const {
     SDL_FPoint corners[5];
     float cos_y = std::cos(yaw);
@@ -82,6 +86,7 @@ void JetRacer::render(SDL_Renderer* renderer, float scale) const {
 
 }
 
+//resets car position and velocity
 void JetRacer::reset(float x0, float y0, float yaw0, SDL_FPoint v0) {
     x = x0;
     y = y0;
@@ -89,6 +94,7 @@ void JetRacer::reset(float x0, float y0, float yaw0, SDL_FPoint v0) {
     v = v0;
 }
 
+//stops the car and clears any current path
 void JetRacer::stop() {
     v = { 0.0f ,0.0f};
     clearPath();
@@ -114,7 +120,7 @@ void JetRacer::purePursuitPath(const std::vector<State>& path, const OBB& goal_b
     double dy_goal = path.back().y - y;
     double goal_dist = std::sqrt(dx_goal * dx_goal + dy_goal * dy_goal);
     float effective_look = std::min(lookahead_distance, (float)goal_dist);
-
+    //advance to next waypoint if close enough
     while (current_waypoint < path.size() - 1) {
         double dx = path[current_waypoint].x - x;
         double dy = path[current_waypoint].y - y;
@@ -137,7 +143,7 @@ void JetRacer::purePursuitPath(const std::vector<State>& path, const OBB& goal_b
                 std::pow(path[i + 1].x - path[i].x, 2) +
                 std::pow(path[i + 1].y - path[i].y, 2)
             );
-
+            //find the segment where the lookahead point lies
             if (total_dist + seg_length >= effective_look) {
                 float rem = effective_look - total_dist;
                 float ratio = rem / seg_length;
@@ -157,7 +163,7 @@ void JetRacer::purePursuitPath(const std::vector<State>& path, const OBB& goal_b
     double alpha = std::atan2(rel_pos.y, rel_pos.x) - yaw;
     double steer = std::atan2(2.0 * wheelbase * std::sin(alpha), effective_look);
     steer = std::min(0.5, std::max(steer, -0.5));
-
+    //calculate target speed based on turning radius
     double curv = std::abs(steer) / wheelbase;
     double target_vel = max_speed / (3.0 * curv + 1e-5); 
     double vel_err = target_vel - std::sqrt(v.x * v.x + v.y * v.y);

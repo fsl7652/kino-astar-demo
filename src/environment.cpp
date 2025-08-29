@@ -38,6 +38,8 @@ struct AppState {
     bool map_changed = false;
 };
 
+
+// Adds boundary walls around the window
 void addBounds(void* appstate) {
 
     AppState* state = (AppState*)appstate;
@@ -52,7 +54,7 @@ void addBounds(void* appstate) {
     }
 }
 
-
+// Initialises predefined maps
 void initMaps(void* appstate) {
     AppState* state = (AppState*)appstate;
     Map default_map;
@@ -128,6 +130,7 @@ void mousePress(void* appstate, SDL_MouseButtonEvent& b) {
     const float scale = 100.0f;
     float worldX = b.x / scale;
     float worldY = b.y / scale;
+    // Left click to set goal
     if (b.button == SDL_BUTTON_LEFT) {
         
         std::vector<OBB> wall_boxes;
@@ -156,6 +159,7 @@ void mousePress(void* appstate, SDL_MouseButtonEvent& b) {
                 state->car.setPath(new_path);
         }
     }
+    //  right click to start/end obstacle placement
     else if (b.button == SDL_BUTTON_RIGHT)
     {
         if (!state->obs_placing)
@@ -246,16 +250,14 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
         return SDL_APP_FAILURE;
     }
 
-
+    
     AppState* state = new AppState();
-
+    
     addBounds(state);
 
     initMaps(state);
 
     loadMap(state, 0);
-
-    
 
     *appstate = state;
     return SDL_APP_CONTINUE;
@@ -273,6 +275,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
     case SDL_EVENT_MOUSE_MOTION:
         state->mouse = { event->motion.x / 100.0f, event->motion.y /100.0f }; 
         break;
+    //updates obstacle rotation angle based on mouse wheel input
     case SDL_EVENT_MOUSE_WHEEL:
         if (event->wheel.y > 0) {
             state->obs_angle += 0.1f;
@@ -286,6 +289,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
                 state->obs_angle = 0.0f;
             }
         }
+    //changes map to inputted number key or cycles to next map with tab key
     case SDL_EVENT_KEY_DOWN:
         if (event->key.key >= SDLK_1 && event->key.key <= SDLK_9)
         {
@@ -317,7 +321,7 @@ SDL_AppResult SDL_AppIterate(void* appstate)
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     const bool* keys = SDL_GetKeyboardState(NULL);
-
+    //update car position based on keyboard input if not following a path
     if (!car.getPath().empty()) {
         if (state->obs_changed) {
             if (car.pathIntersectsObstacles(obstacles)) {
@@ -330,13 +334,14 @@ SDL_AppResult SDL_AppIterate(void* appstate)
         car.purePursuitPath(car.getPath(), goal.box, dt);
     }
     else {
+        //throttle and steering input, up & down for throttle, left & right for steering
         float throttle = (keys[SDL_SCANCODE_UP] ? 1.0f : 0.0f) +
             (keys[SDL_SCANCODE_DOWN] ? -1.0f : 0.0f);
         float steering = (keys[SDL_SCANCODE_LEFT] ? -0.3f : 0.0f) +
             (keys[SDL_SCANCODE_RIGHT] ? 0.3f : 0.0f);
         car.update(dt, throttle, steering);
     }
-
+    //exit application if escape key is pressed
     if (keys[SDL_SCANCODE_ESCAPE] > 0.0f)
     {
         return SDL_APP_SUCCESS;
@@ -347,7 +352,7 @@ SDL_AppResult SDL_AppIterate(void* appstate)
     }
 
     
-
+    //handle collisions with walls and bounds
     OBB car_box = car.getOBB();
     for (const auto& obs : obstacles) {
         CollisionResult res = car_box.collision(obs);
@@ -365,6 +370,7 @@ SDL_AppResult SDL_AppIterate(void* appstate)
             car_box = car.getOBB();
         }
     }
+    //check for reaching goal
     CollisionResult goal_res = car_box.collision(goal.box);
     if (goal_res.collided)
     {
@@ -375,7 +381,8 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 
 
     //RenderCircle::drawCircle(renderer, { 100.0f, 100.0f }, 20);
-
+    
+    //renders all world objects
     for (int i = 0; i < walls.size(); i++)
     {
         walls[i].render(renderer);
