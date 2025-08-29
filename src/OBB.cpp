@@ -1,4 +1,5 @@
 #include "OBB.h"
+#include <cfloat>
 
 //calculates the four corners of the OBB based on center, half-width, half-height and rotation angle
 std::array<SDL_FPoint, 4> OBB::getCorners() const {

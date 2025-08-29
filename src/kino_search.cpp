@@ -1,6 +1,6 @@
 #include "kino_search.h"
 #include <algorithm>
-#include <corecrt_math_defines.h>
+#include <cmath>
 #define _USE_MATH_DEFINES
 
 void NodeDeleter::operator()(Node* ptr) const {

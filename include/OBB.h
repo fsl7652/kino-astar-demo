@@ -1,10 +1,12 @@
 #pragma once
+#define _USE_MATH_DEFINES
 #include <array>
 #define SDL_MAIN_HANDLED
 #define SDL_DISABLE_IMPLICIT_LINKING
 #include <SDL3/SDL.h>
-#include <cmath>
 #include <limits>
+#include <cmath>
+#include <cfloat>
 
 struct CollisionResult {
     bool collided;

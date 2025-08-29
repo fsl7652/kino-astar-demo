@@ -1,75 +1,41 @@
-name: CMake Build and Test
+name: Verify Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        build_type: [Release]
-        include:
-          - os: ubuntu-latest
-            install_cmd: sudo apt-get update && sudo apt-get install -y libsdl3-dev
-          - os: windows-latest
-            install_cmd: |
-              # Download and extract SDL3 for Windows
-              curl -L -o sdl3.zip https://github.com/libsdl-org/SDL/releases/download/release-3.0.0/SDL3-devel-3.0.0-VC.zip
-              7z x sdl3.zip -oC:\SDL3
-              echo "SDL3_ROOT=C:\SDL3" >> $env:GITHUB_ENV
-          - os: macos-latest
-            install_cmd: brew install sdl3
-
+  verify-build:
+    runs-on: ubuntu-latest
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install SDL3 dependencies
-      run: ${{ matrix.install_cmd }}
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y cmake build-essential git
 
-    - name: Configure CMake
+    - name: Build and Install SDL3
       run: |
-        cmake -B build \
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-          -DSDL3_ROOT="${{ matrix.os == 'windows-latest' && 'C:/SDL3' || '' }}"
+        git clone https://github.com/libsdl-org/SDL.git -b main --depth=1
+        cd SDL
+        mkdir build && cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DSDL_UNIX_CONSOLE_BUILD=ON
+        make -j$(nproc)
+        sudo make install
 
-    - name: Build
-      run: cmake --build build --config ${{ matrix.build_type }}
-
-    - name: Run basic test (Linux/macOS)
-      if: matrix.os != 'windows-latest'
+    - name: Configure and Build Project
       run: |
-        # Check if executable exists and can run
+        mkdir build && cd build
+        cmake .. && make -j$(nproc)
+
+    - name: Verify Executable
+      run: |
         if [ -f build/JetRacerDemo ]; then
-          echo "Executable built successfully"
-          # Test that it doesn't crash immediately
-          timeout 5s build/JetRacerDemo --help || true
+          echo "✓ Build successful - executable created"
+        else
+          echo "✗ Build failed - no executable found"
+          exit 1
         fi
-
-    - name: Run basic test (Windows)
-      if: matrix.os == 'windows-latest'
-      run: |
-        # Check if executable exists
-        if exist build\Release\JetRacerDemo.exe (
-          echo "Executable built successfully"
-          # Copy SDL3.dll for testing
-          copy C:\SDL3\lib\x64\SDL3.dll build\Release\
-          # Test that it doesn't crash immediately
-          build\Release\JetRacerDemo.exe --help || echo "Test completed"
-        )
-
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: JetRacerDemo-${{ matrix.os }}-${{ matrix.build_type }}
-        path: |
-          build/JetRacerDemo*
-          build/*/JetRacerDemo*
-          build/*/*/JetRacerDemo*

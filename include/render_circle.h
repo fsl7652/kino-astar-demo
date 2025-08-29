@@ -1,8 +1,9 @@
 #pragma once
 #define SDL_MAIN_HANDLED
 #define SDL_DISABLE_IMPLICIT_LINKING
+#define _USE_MATH_DEFINES
 #include <SDL3/SDL.h>
-#include <corecrt_math_defines.h>
+#include <cmath>
 
 
 class RenderCircle {
