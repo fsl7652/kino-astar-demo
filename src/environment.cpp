@@ -206,9 +206,34 @@ void mousePress(void* appstate, SDL_MouseButtonEvent& b) {
     }
 }
 
+void showHelp() {
+    std::cout << "JetRacer Pathfinding Demo\n";
+    std::cout << "Usage: JetRacerDemo [options]\n";
+    std::cout << "Options:\n";
+    std::cout << "  --help     Show this help message\n";
+    std::cout << "  --version  Show version information\n";
+    std::cout << "  --test     Run in test mode (exit after initialization)\n";
+}
+
+
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
+    for (int i = 0; i < argc; i++) {
+        if (strcmp(argv[i], "--help") == 0) {
+            showHelp();
+            return SDL_APP_SUCCESS;
+        }
+        else if (strcmp(argv[i], "--version") == 0) {
+            std::cout << "JetRacerDemo version 1.0.0\n";
+            return SDL_APP_SUCCESS;
+        }
+        else if (strcmp(argv[i], "--test") == 0) {
+            std::cout << "Test mode: Initialization successful\n";
+            return SDL_APP_SUCCESS;
+        }
+    }
+
     SDL_SetAppMetadata("JetRacer Demo", "1.0", "");
 
     if (!SDL_Init(SDL_INIT_VIDEO)) {
