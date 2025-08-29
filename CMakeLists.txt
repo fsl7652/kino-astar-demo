@@ -16,7 +16,6 @@ set(SOURCES
     src/wall.cpp
     src/jetracer.cpp
     src/goal.cpp
-    src/render_circle.cpp
 )
 
 # Include directories
