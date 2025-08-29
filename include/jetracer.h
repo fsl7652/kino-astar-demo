@@ -1,5 +1,5 @@
 #pragma once
-#include <cmath>
+#define _USE_MATH_DEFINES
 #include "OBB.h"
 #include <vector>
 #include "kino_search.h"
