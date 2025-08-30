@@ -116,8 +116,8 @@ max_speed = 2.0f;       // Maximum speed
 ## Performance
 
 The algorithm provides real-time performance with:
-- 1000+ nodes expanded per search
-- <5ms path computation time
+- Up to 10000 nodes expanded per search
+- <10ms path computation time
 - Smooth 60 FPS rendering
 
 ## License
