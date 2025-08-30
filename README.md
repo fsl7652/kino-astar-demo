@@ -35,7 +35,7 @@ cmake --build . --config Release
 ./JetRacerDemo
 ```
 
-## 📋 Controls
+## Controls
 
 | Control | Action |
 |---------|--------|
@@ -47,7 +47,7 @@ cmake --build . --config Release
 | **Tab** | Cycle through maps |
 | **ESC** | Quit application |
 
-## 🗺️ Maps
+## Maps
 
 1. **Default Map** - Simple environment with basic obstacles
 2. **Maze Map** - Complex navigation challenge
@@ -72,7 +72,7 @@ brew install sdl3 cmake
 3. Set environment variable: `SDL3_ROOT=C:\SDL3`
 4. Add `C:\SDL3\bin` to your PATH
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 src/
@@ -85,7 +85,7 @@ src/
 └── render_circle.cpp # Utility rendering functions
 ```
 
-## 🔧 Customization
+## Customisation
 
 ### Adding New Maps
 Edit the `initMaps()` function in `environment.cpp` to add custom environments.
