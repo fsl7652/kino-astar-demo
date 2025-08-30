@@ -1,6 +1,6 @@
 # JetRacer - Kinodynamic Pathfinding Demo
 
-A real-time kinodynamic A* pathfinding implementation using SDL3, featuring vehicle physics and dynamic obstacle avoidance.
+A real-time kinodynamic A* pathfinding implementation using SDL3, featuring vehicle physics and dynamic obstacle avoidance. I was inspired to do this project by wanting to show my final year university project in a more digestable & simpler system.
 
 ## Features
 
