@@ -99,7 +99,6 @@ width = 0.19f;          // Vehicle width
 max_speed = 2.0f;       // Maximum speed
 ```
 
-## 🐛 Troubleshooting
 
 ### Common Issues
 
@@ -114,14 +113,14 @@ max_speed = 2.0f;       // Maximum speed
 - Verify CMake version ≥ 3.12
 - Check compiler supports C++17
 
-## 📊 Performance
+## Performance
 
 The algorithm provides real-time performance with:
 - 1000+ nodes expanded per search
 - <5ms path computation time
 - Smooth 60 FPS rendering
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -131,11 +130,11 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **SDL3** for cross-platform graphics and input
 
