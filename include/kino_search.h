@@ -77,6 +77,7 @@ using NodePtr = std::unique_ptr<Node, NodeDeleter>;
 /// @param current_open_size Current size of the open set  
 /// @param current_closed_size Current size of the closed set
 /// @note Provides a reset function to clear metrics
+/// @note Provides a printMetrics function to output metrics to console
 struct SearchMetrics {
     std::string status = "Idle";
     double path_cost = 0.0;
@@ -100,6 +101,18 @@ struct SearchMetrics {
         calc_time = 0.0;
         path_found = false;
     }
+    void printMetrics() {
+    std::cout << "\n=== Pathfinding Results ===" << std::endl;
+    std::cout << "Status: " << status << std::endl;
+    std::cout << "Time: " << calc_time << " ms" << std::endl;
+    std::cout << "Nodes expanded: " << nodes_expanded << std::endl;
+    std::cout << "Max open set size: " << max_open_size << std::endl;
+    if (path_found) {
+        std::cout << "Path length: " << path_length << " nodes" << std::endl;
+        std::cout << "Path cost: " << path_cost << std::endl;
+    }
+    std::cout << "==========================" << std::endl;
+}
 };
 
 /// @brief Kinodynamic A* path planner for a simple car model

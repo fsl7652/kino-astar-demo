@@ -94,7 +94,7 @@ std::vector<State> SimpleKino::findPath(const State& start, const OBB& goal_box,
                 path_node = path_node->parent;
             }
             cur_path = BSplineSmooth(cur_path, 2);
-
+            metrics.printMetrics();
             return cur_path;
         }
         //skip if already expanded
@@ -138,18 +138,7 @@ std::vector<State> SimpleKino::findPath(const State& start, const OBB& goal_box,
         metrics.calc_time = duration.count();
         metrics.status = "No Path Found";
     }
-    //print metrics
-    std::cout << "\n=== Pathfinding Results ===" << std::endl;
-    std::cout << "Status: " << metrics.status << std::endl;
-    std::cout << "Time: " << metrics.calc_time << " ms" << std::endl;
-    std::cout << "Nodes expanded: " << metrics.nodes_expanded << std::endl;
-    std::cout << "Max open set size: " << metrics.max_open_size << std::endl;
-
-    if (metrics.path_found) {
-        std::cout << "Path length: " << metrics.path_length << " nodes" << std::endl;
-        std::cout << "Path cost: " << metrics.path_cost << std::endl;
-    }
-    std::cout << "==========================" << std::endl;
+    metrics.printMetrics();
     return {};
 }
 
