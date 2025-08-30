@@ -53,7 +53,7 @@ cmake --build . --config Release
 2. **Maze Map** - Complex navigation challenge
 3. **Race Track** - Oval track with center obstacles
 
-## 🛠️ Installation Details
+## Installation Details
 
 ### Linux (Ubuntu/Debian)
 ```bash
@@ -132,8 +132,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-**Enjoy exploring pathfinding!** 🎯
-
-*If you find this project useful, please give it a ⭐ on GitHub!*
 
 </div>
